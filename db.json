@@ -1,0 +1,10 @@
+{
+    "keys": [
+        {
+            "id": "1",
+            "key": ["werbet", "email"],
+            "value": "werbet.off@gmail.com",
+            "secret": false
+        }
+    ]
+}

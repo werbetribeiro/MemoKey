@@ -1,12 +1,17 @@
+import { KeysValuesCard } from "@/components/KeysValuesCard";
+import { handleCopyValue } from "@/utils/copyValues";
 import { useKeysViewModel } from "@/viewmodels/useKeysViewModel";
+
 import React from "react";
-import { FlatList, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
 
 export default function HomeScreen() {
   const { useGetKeys } = useKeysViewModel();
 
   if (useGetKeys.isLoading) {
-    return <Text>Loading...</Text>;
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <ActivityIndicator size="large" />
+    </View>;
   }
 
   if (useGetKeys.isError) {
@@ -17,13 +22,16 @@ export default function HomeScreen() {
     <View>
       <FlatList
         data={useGetKeys.data}
-        keyExtractor={(item) => item.id || ''}
+        keyExtractor={(item) => item.id || ""}
         renderItem={({ item }) => (
-          <View style={{ padding: 10 }}>
-            <Text>{item.key.join(", ")}: {item.value}</Text>
-            {item.secret && <Text>(🔒 secret)</Text>}
-          </View>
+          <KeysValuesCard
+            keysItem={item.key}
+            valueItem={item.value}
+            copyValue={() => handleCopyValue(item.value)}
+          />
         )}
+        refreshing={useGetKeys.isFetching}
+        onRefresh={() => useGetKeys.refetch()}
       />
     </View>
   );

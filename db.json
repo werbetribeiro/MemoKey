@@ -5,6 +5,81 @@
             "key": ["werbet", "email"],
             "value": "werbet.off@gmail.com",
             "secret": false
+        },
+        {
+            "id": "2",
+            "key": ["dona", "pix", "Marlete"],
+            "value": "71983548441",
+            "secret": false
+        },
+        {
+            "id": "3",
+            "key": ["netflix", "senha"],
+            "value": "Netflix2024@Secure",
+            "secret": true
+        },
+        {
+            "id": "4",
+            "key": ["wifi", "casa", "senha"],
+            "value": "MinhaRede#2024",
+            "secret": true
+        },
+        
+        {
+            "id": "6",
+            "key": ["banco", "agencia"],
+            "value": "0001",
+            "secret": false
+        },
+        {
+            "id": "7",
+            "key": ["banco", "conta"],
+            "value": "12345-6",
+            "secret": false
+        },
+
+        {
+            "id": "10",
+            "key": ["telefone", "trabalho"],
+            "value": "71912345678",
+            "secret": false
+        },
+        {
+            "id": "11",
+            "key": ["spotify", "email"],
+            "value": "werbet.music@gmail.com",
+            "secret": false
+        },
+        {
+            "id": "12",
+            "key": ["spotify", "senha"],
+            "value": "MusicLove@123",
+            "secret": true
+        },
+        {
+            "id": "13",
+            "key": ["discord", "servidor", "id"],
+            "value": "987654321098765432",
+            "secret": false
+        },
+        {
+            "id": "14",
+            "key": ["aws", "access", "key"],
+            "value": "AKIAIOSFODNN7EXAMPLE",
+            "secret": true
+        },
+        {
+            "id": "15",
+            "key": ["cartao", "final"],
+            "value": "1234",
+            "secret": false
+        },
+        {
+            "id": "16",
+            "key": ["linkedin", "perfil"],
+            "value": "linkedin.com/in/werbetribeiro",
+            "secret": false
         }
+
     ]
 }

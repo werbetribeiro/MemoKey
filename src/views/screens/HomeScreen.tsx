@@ -1,4 +1,7 @@
+import KeyForm from "@/components/KeyForm";
 import { KeysValuesCard } from "@/components/KeysValuesCard";
+import MyButton from "@/components/ui/Button";
+import BottomSheet from "@/components/ui/Modal";
 import Colors from "@/constants/theme/Colors";
 import { Keys } from "@/models/Keys";
 import { handleCopyValue } from "@/utils/copyValues";
@@ -17,10 +20,23 @@ import {
 
 export default function HomeScreen() {
   const { useGetKeys } = useKeysViewModel();
+
   const [secret, setSecret] = useState<Keys[]>([]);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const [selectedTypeKeys, setSelectedTypeKeys] = useState<boolean>(false);
   const [searchText, setSearchText] = useState("");
+
+  // Filtra os dados quando useGetKeys.data muda
+  useEffect(() => {
+    if (useGetKeys.data) {
+      const toSecrets = useGetKeys.data.filter(
+        (key) => key.secret === selectedTypeKeys
+      );
+
+      setSecret(toSecrets);
+    }
+  }, [useGetKeys.data, selectedTypeKeys]);
 
   // Lógica para pesquisar keys - filtra sobre os dados originais (secret)
   const filteredData = searchText
@@ -48,19 +64,26 @@ export default function HomeScreen() {
     return <Text>Error: {JSON.stringify(useGetKeys.error)}</Text>;
   }
 
-  // Filtra os dados quando useGetKeys.data muda
-  useEffect(() => {
-    if (useGetKeys.data) {
-      const toSecrets = useGetKeys.data.filter(
-        (key) => key.secret === selectedTypeKeys
-      );
-
-      setSecret(toSecrets);
-    }
-  }, [useGetKeys.data, selectedTypeKeys]);
-
   return (
     <View>
+      {/* <MyButton title="Add" onPress={handleAddKey}/> */}
+      {/* <KeyForm /> */}
+
+      <MyButton
+        title="Abrir Bottom Sheet"
+        onPress={() => setModalVisible(true)}
+      />
+
+      <BottomSheet
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        height="50%" // ou use número: 600
+        showHandle={true}
+      >
+        {/* Aqui você pode colocar QUALQUER componente */}
+        <KeyForm />
+      </BottomSheet>
+
       <View style={{ marginBottom: 20, position: "relative" }}>
         <Feather
           name="search"
@@ -144,8 +167,7 @@ export default function HomeScreen() {
         keyExtractor={(item) => item.id || ""}
         renderItem={({ item }) => (
           <KeysValuesCard
-            keysItem={item.key}
-            valueItem={item.value}
+            keys={item}
             copyValue={() => handleCopyValue(item.value)}
           />
         )}

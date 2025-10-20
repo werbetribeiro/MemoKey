@@ -4,6 +4,7 @@ const tintColorVariant = "#8D55FF"
 export default {
   primary: {
     black: "#000000",
+    blackVariant: "rgba(0, 0, 0, 0.5)",
     white: "#FFFFFF",
     background: "#191919",
     tint: tintColor,

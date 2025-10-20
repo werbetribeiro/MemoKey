@@ -1,5 +1,5 @@
 import Colors from "@/constants/theme/Colors";
-import Feather from "@expo/vector-icons/Feather";
+import { Feather } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -12,16 +12,22 @@ interface KeysValuesCardProps {
 export const KeysValuesCard = ({
   keysItem,
   valueItem,
-  copyValue
+  copyValue,
 }: KeysValuesCardProps) => {
   return (
     <View style={styles.container}>
-      <View style={{ flex: 1, gap: 4 }}>
-        <Text style={styles.keyText}>{keysItem.join(", ")}</Text>
+      <TouchableOpacity
+        onLongPress={copyValue}
+        activeOpacity={0.8}
+        delayLongPress={700}
+        style={{ flex: 1, gap: 4 }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+          <Feather name="key" size={12} color={Colors.primary.tint} />
+
+          <Text style={styles.keyText}>{keysItem.join(", ")}</Text>
+        </View>
         <Text style={styles.valueText}>{valueItem}</Text>
-      </View>
-      <TouchableOpacity onPress={copyValue} activeOpacity={0.8} style={styles.copyButton}>
-        <Feather name="copy" size={14} color={Colors.primary.black} />
       </TouchableOpacity>
     </View>
   );
@@ -36,12 +42,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
-    paddingVertical: 12,
+    paddingVertical: 15,
     marginHorizontal: 10,
   },
   keyText: {
     fontSize: 12,
-    color: Colors.primary.black,
+    color: Colors.primary.gray200,
   },
   valueText: {
     fontSize: 18,

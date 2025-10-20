@@ -13,6 +13,12 @@
             "secret": false
         },
         {
+            "id": "25",
+            "key": ["meu", "pix", "Werbet"],
+            "value": "7197183548441",
+            "secret": false
+        },
+        {
             "id": "3",
             "key": ["netflix", "senha"],
             "value": "Netflix2024@Secure",
@@ -84,6 +90,12 @@
             "id": "17",
             "key": ["linkedin", "perfil", "work"],
             "value": "nada",
+            "secret": true
+        },
+        {
+            "id": "18",
+            "key": ["naada", "teste", "teste de novo"],
+            "value": "tá curioso pq",
             "secret": true
         }
 

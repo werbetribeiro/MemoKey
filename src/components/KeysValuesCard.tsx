@@ -15,21 +15,21 @@ export const KeysValuesCard = ({
   copyValue,
 }: KeysValuesCardProps) => {
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        onLongPress={copyValue}
-        activeOpacity={0.8}
-        delayLongPress={700}
-        style={{ flex: 1, gap: 4 }}
-      >
+    <TouchableOpacity
+      onLongPress={copyValue}
+      activeOpacity={0.8}
+      delayLongPress={700}
+      style={styles.container}
+    >
+      <View style={{ flex: 1, gap: 5 }}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
           <Feather name="key" size={12} color={Colors.primary.tint} />
 
           <Text style={styles.keyText}>{keysItem.join(", ")}</Text>
         </View>
         <Text style={styles.valueText}>{valueItem}</Text>
-      </TouchableOpacity>
-    </View>
+      </View>
+    </TouchableOpacity>
   );
 };
 

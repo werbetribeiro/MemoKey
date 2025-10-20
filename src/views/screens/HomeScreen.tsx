@@ -18,23 +18,9 @@ import {
 export default function HomeScreen() {
   const { useGetKeys } = useKeysViewModel();
   const [secret, setSecret] = useState<Keys[]>([]);
-  const [noSecret, setNoSecret] = useState<Keys[]>([]);
+
   const [selectedTypeKeys, setSelectedTypeKeys] = useState<boolean>(false);
   const [searchText, setSearchText] = useState("");
-
-  // Filtra os dados quando useGetKeys.data muda
-  useEffect(() => {
-    if (useGetKeys.data) {
-      const yesSecrets = useGetKeys.data.filter((key) => key.secret === selectedTypeKeys);
-      const noSecrets = useGetKeys.data.filter((key) => key.secret === selectedTypeKeys);
-      setSecret(yesSecrets);
-      setNoSecret(noSecrets);
-      console.log("Secretas:", yesSecrets);
-      console.log("Não secretas:", noSecrets);
-    }
-  }, [useGetKeys.data]);
-
-  const total = secret.length;
 
   // Lógica para pesquisar keys - filtra sobre os dados originais (secret)
   const filteredData = searchText
@@ -47,6 +33,7 @@ export default function HomeScreen() {
 
   const handleSelectTypeKeys = (state: boolean) => {
     setSelectedTypeKeys(state);
+    console.log("Clicou em selecionar tipo de chave:", state);
   };
 
   if (useGetKeys.isLoading) {
@@ -61,9 +48,20 @@ export default function HomeScreen() {
     return <Text>Error: {JSON.stringify(useGetKeys.error)}</Text>;
   }
 
+  // Filtra os dados quando useGetKeys.data muda
+  useEffect(() => {
+    if (useGetKeys.data) {
+      const toSecrets = useGetKeys.data.filter(
+        (key) => key.secret === selectedTypeKeys
+      );
+
+      setSecret(toSecrets);
+    }
+  }, [useGetKeys.data, selectedTypeKeys]);
+
   return (
     <View>
-      <View style={{ marginBottom: 20 }}>
+      <View style={{ marginBottom: 20, position: "relative" }}>
         <Feather
           name="search"
           size={24}
@@ -73,13 +71,11 @@ export default function HomeScreen() {
         <TextInput
           value={searchText}
           onChangeText={(text) => {
-            console.log("Pesquisando:", text);
             setSearchText(text);
           }}
           autoComplete={"off"}
           autoCapitalize={"none"}
           autoCorrect={false}
-          clearButtonMode={"always"}
           placeholder="Pesquisar..."
           style={{
             backgroundColor: Colors.primary.gray100,
@@ -87,18 +83,34 @@ export default function HomeScreen() {
             borderRadius: 8,
             paddingVertical: 10,
             paddingLeft: 34,
+            paddingRight: searchText ? 34 : 10,
             position: "relative",
           }}
         />
+        {searchText ? (
+          <TouchableOpacity
+            onPress={() => setSearchText("")}
+            style={{
+              position: "absolute",
+              right: 14,
+              top: 5,
+              zIndex: 1,
+              padding: 4,
+            }}
+          >
+            <Feather name="x" size={20} color={Colors.primary.black} />
+          </TouchableOpacity>
+        ) : null}
       </View>
 
       <View
         style={{
           flexDirection: "row",
           gap: 10,
-          marginBottom: 10,
+          marginBottom: 20,
           alignContent: "center",
           justifyContent: "center",
+          marginHorizontal: 10,
         }}
       >
         <TouchableOpacity
@@ -108,9 +120,10 @@ export default function HomeScreen() {
             padding: 8,
             backgroundColor: Colors.primary.tintVariant,
             borderRadius: 8,
+            alignItems: "center",
           }}
         >
-          <Text style={{ color: "white" }}>Secretas</Text>
+          <Text style={{ color: "white" }}>🔐 Secretas</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => handleSelectTypeKeys(false)}
@@ -119,9 +132,10 @@ export default function HomeScreen() {
             padding: 8,
             backgroundColor: Colors.primary.tint,
             borderRadius: 8,
+            alignItems: "center",
           }}
         >
-          <Text style={{ color: "white" }}>Não Secretas</Text>
+          <Text style={{ color: "white" }}>🔓 Não Secretas</Text>
         </TouchableOpacity>
       </View>
 
@@ -143,9 +157,10 @@ export default function HomeScreen() {
               backgroundColor: Colors.primary.tintVariant,
               marginHorizontal: 10,
               borderRadius: 8,
+              marginTop: 4,
             }}
           >
-            Total de Itens: {total}
+            Total de Itens: {filteredData.length}
           </Text>
         )}
         refreshing={useGetKeys.isFetching}

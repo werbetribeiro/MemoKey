@@ -14,7 +14,7 @@ import { Platform } from "react-native";
 // Se estiver usando DISPOSITIVO FÍSICO, use: http://192.168.1.110:3000
 
 export const KEYS_BASE_URL = Platform.select({
-  ios: "http://192.168.1.110:3000",
-  android: "http://192.168.1.110:3000", // Alterado para IP da rede (dispositivo físico)
-  default: "http://192.168.1.110:3000"
+  ios: "http://172.18.0.15:3000",
+  android: "http://172.18.0.15:3000", // Alterado para IP da rede (dispositivo físico)
+  default: "http://172.18.0.15:3000",
 });

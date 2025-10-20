@@ -1,9 +1,21 @@
 import Colors from "@/constants/theme/Colors";
 import { KeysLocalService } from "@/services/KeysLocalService";
 import { KeyFormData, keySchema } from "@/types/KeysSchema";
+import { Feather } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, Resolver, useForm } from "react-hook-form";
-import { Alert, StyleSheet, Switch, Text, TextInput, View } from "react-native";
+import {
+  Alert,
+  StyleSheet,
+  Switch,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from "uuid";
 import MyButton from "./ui/Button";
 
 interface KeyFormProps {
@@ -20,7 +32,7 @@ export default function KeyForm() {
   } = useForm<KeyFormData>({
     resolver: zodResolver(keySchema) as Resolver<KeyFormData>,
     defaultValues: {
-      id: Date.now().toString(36),
+      id: uuidv4(),
       key: [""],
       value: "",
       secret: false,
@@ -29,7 +41,12 @@ export default function KeyForm() {
 
   const onSubmit = async (data: KeyFormData) => {
     try {
-      await KeysLocalService.saveKeys([data]);
+      await KeysLocalService.saveKeys({
+        id: data.id,
+        key: data.key,
+        value: data.value,
+        secret: data.secret,
+      });
       Alert.alert(
         "Deseja Salvar?",
         `Chaves: ${data.key.join(", ")}\nValor: ${data.value}`,
@@ -51,7 +68,7 @@ export default function KeyForm() {
         ]
       );
     } catch (error) {
-        throw(`Não foi possível salvar a chave: ${error}`);
+      throw `Não foi possível salvar a chave: ${error}`;
     }
 
     return;
@@ -72,17 +89,29 @@ export default function KeyForm() {
         render={({ field: { onChange, value } }) => (
           <View style={{ gap: 6 }}>
             {value.map((k, i) => (
-              <TextInput
-                key={i}
-                placeholder={`Chave: ${i + 1}`}
-                value={k}
-                onChangeText={(text) => {
-                  const updated = [...value];
-                  updated[i] = text;
-                  onChange(updated);
-                }}
-                style={styles.input}
-              />
+              <View key={`key-input-${i}`} style={styles.inputContainer}>
+                <TextInput
+                  placeholder={`Chave: ${i + 1}`}
+                  value={k}
+                  onChangeText={(text) => {
+                    const updated = [...value];
+                    updated[i] = text;
+                    onChange(updated);
+                  }}
+                  style={[styles.input, { flex: 1 }]}
+                />
+                {value.length > 1 && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      const updated = value.filter((_, index) => index !== i);
+                      onChange(updated);
+                    }}
+                    style={styles.removeButton}
+                  >
+                    <Feather name="x" size={20} color={Colors.primary.tint} />
+                  </TouchableOpacity>
+                )}
+              </View>
             ))}
             <MyButton
               title="Adicionar chave"
@@ -124,7 +153,6 @@ export default function KeyForm() {
         style={{
           flexDirection: "row",
           alignItems: "center",
-          //justifyContent: "space-between",
         }}
       >
         <Text style={styles.label}>É secreto?</Text>
@@ -155,10 +183,24 @@ const styles = StyleSheet.create({
   label: {
     color: Colors.primary.gray100,
   },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
   input: {
     backgroundColor: Colors.primary.gray100,
     color: Colors.primary.black,
     borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+  },
+  removeButton: {
+    backgroundColor: Colors.primary.gray100,
+    borderRadius: 8,
+    padding: 8,
+    justifyContent: "center",
+    alignItems: "center",
   },
   button: {
     backgroundColor: Colors.primary.tint,

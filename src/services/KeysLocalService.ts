@@ -11,7 +11,7 @@ async function getKeys(): Promise<Keys[]> {
     throw new Error(`Error retrieving keys from local storage: ${error}`);
   }
 }
-async function saveKeys([newKeys]: Keys[]): Promise<void> {
+async function saveKeys(newKeys: Keys): Promise<void> {
   try {
     const storageKeys = await getKeys();
     const jsonValue = JSON.stringify([...storageKeys, newKeys]);
@@ -30,9 +30,17 @@ async function removeKeys(id: string): Promise<void> {
     throw new Error(`Error removing keys from local storage: ${error}`);
   }
 }
+async function clearAllKeys(): Promise<void> {
+  try {
+    await AsyncStorage.removeItem(KEYS_STORAGE_KEY);
+  } catch (error) {
+    throw new Error(`Error clearing all keys from local storage: ${error}`);
+  }
+}
 
 export const KeysLocalService = {
   getKeys,
   saveKeys,
   removeKeys,
+  clearAllKeys,
 };

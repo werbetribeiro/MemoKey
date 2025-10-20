@@ -1,16 +1,14 @@
 import KeyForm from "@/components/KeyForm";
 import { KeysValuesCard } from "@/components/KeysValuesCard";
-import MyButton from "@/components/ui/Button";
 import BottomSheet from "@/components/ui/Modal";
 import Colors from "@/constants/theme/Colors";
 import { Keys } from "@/models/Keys";
+import { KeysLocalService } from "@/services/KeysLocalService";
 import { handleCopyValue } from "@/utils/copyValues";
-import { useKeysViewModel } from "@/viewmodels/useKeysViewModel";
 import { Feather } from "@expo/vector-icons";
 
 import React, { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   FlatList,
   Text,
   TextInput,
@@ -19,72 +17,126 @@ import {
 } from "react-native";
 
 export default function HomeScreen() {
-  const { useGetKeys } = useKeysViewModel();
-
-  const [secret, setSecret] = useState<Keys[]>([]);
+  const [keys, setKeys] = useState<Keys[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
-
-  const [selectedTypeKeys, setSelectedTypeKeys] = useState<boolean>(false);
   const [searchText, setSearchText] = useState("");
+  const [selectedTypeKeys, setSelectedTypeKeys] = useState<boolean>(false);
 
-  // Filtra os dados quando useGetKeys.data muda
-  useEffect(() => {
-    if (useGetKeys.data) {
-      const toSecrets = useGetKeys.data.filter(
-        (key) => key.secret === selectedTypeKeys
-      );
-
-      setSecret(toSecrets);
+  async function getKeys() {
+    try {
+      const response = await KeysLocalService.getKeys();
+      setKeys(response);
+      console.log("Keys:", response);
+    } catch (error) {
+      console.error("Error retrieving keys:", error);
     }
-  }, [useGetKeys.data, selectedTypeKeys]);
+  }
 
-  // Lógica para pesquisar keys - filtra sobre os dados originais (secret)
+  // Filtra por tipo (secreto ou não)
+  const filteredByType = keys.filter((key) => key.secret === selectedTypeKeys);
+
+  // Lógica para pesquisar keys - filtra sobre os dados já filtrados por tipo
   const filteredData = searchText
-    ? secret.filter((key) =>
+    ? filteredByType.filter((key) =>
         key.key.some((itemKey) =>
           itemKey.toLowerCase().includes(searchText.toLowerCase())
         )
       )
-    : secret;
+    : filteredByType;
 
   const handleSelectTypeKeys = (state: boolean) => {
     setSelectedTypeKeys(state);
-    console.log("Clicou em selecionar tipo de chave:", state);
   };
 
-  if (useGetKeys.isLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
+  const handleDeleteAllKeys = async () => {
+    try {
+      await KeysLocalService.clearAllKeys();
+      setKeys([]);
+    } catch (error) {
+      console.error("Error clearing all keys:", error);
+    }
+  };
 
-  if (useGetKeys.isError) {
-    return <Text>Error: {JSON.stringify(useGetKeys.error)}</Text>;
-  }
+  useEffect(() => {
+    getKeys();
+  }, [selectedTypeKeys]);
 
   return (
     <View>
       {/* <MyButton title="Add" onPress={handleAddKey}/> */}
       {/* <KeyForm /> */}
+      <View style={{ alignItems: 'center', marginVertical: 20, flex: 1, justifyContent: "space-between", flexDirection: "row" , marginHorizontal:10}}  >
+        <View>
+          <Text style={{ color: Colors.primary.gray100, fontSize: 34, fontWeight: 'bold' }}>
+            Memo <Text style={{ color: Colors.primary.tint, fontSize: 34, fontWeight: 'bold' }}>Key</Text>
+          </Text>
+        </View>
+      <TouchableOpacity style={{ backgroundColor: Colors.primary.tint, borderRadius: "100%", padding: 4 }} onPress={() => setModalVisible(true)}>
+        <Feather name="plus" color={Colors.primary.gray100} size={24}/>
+      </TouchableOpacity>
+      </View>
 
-      <MyButton
+
+
+
+{/*       <MyButton
         title="Abrir Bottom Sheet"
         onPress={() => setModalVisible(true)}
-      />
+      /> */}
 
       <BottomSheet
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
-        height="50%" // ou use número: 600
+        height="70%" // ou use número: 600
         showHandle={true}
       >
         {/* Aqui você pode colocar QUALQUER componente */}
         <KeyForm />
       </BottomSheet>
 
-      <View style={{ marginBottom: 20, position: "relative" }}>
+  
+
+      <View
+        style={{
+          flexDirection: "row",
+          gap: 10,
+          marginBottom: 20,
+          alignContent: "center",
+          justifyContent: "center",
+          marginHorizontal: 10,
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => handleSelectTypeKeys(true)}
+          style={{
+            flex: 1,
+            padding: 8,
+            backgroundColor: Colors.primary.tintVariant,
+            borderRadius: 8,
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ color: "white" }}>🔐 Secretas</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => handleSelectTypeKeys(false)}
+          style={{
+            flex: 1,
+            padding: 8,
+            backgroundColor: Colors.primary.tint,
+            borderRadius: 8,
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ color: "white" }}>🔓 Não Secretas</Text>
+        </TouchableOpacity>
+      </View>
+
+      <FlatList
+        data={filteredData}
+        keyExtractor={(item, index) => item.id || `key-${index}`}
+        ListHeaderComponent={()=> (
+              <View style={{ marginBottom: 20, position: "relative" }}>
         <Feather
           name="search"
           size={24}
@@ -125,46 +177,7 @@ export default function HomeScreen() {
           </TouchableOpacity>
         ) : null}
       </View>
-
-      <View
-        style={{
-          flexDirection: "row",
-          gap: 10,
-          marginBottom: 20,
-          alignContent: "center",
-          justifyContent: "center",
-          marginHorizontal: 10,
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => handleSelectTypeKeys(true)}
-          style={{
-            flex: 1,
-            padding: 8,
-            backgroundColor: Colors.primary.tintVariant,
-            borderRadius: 8,
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ color: "white" }}>🔐 Secretas</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => handleSelectTypeKeys(false)}
-          style={{
-            flex: 1,
-            padding: 8,
-            backgroundColor: Colors.primary.tint,
-            borderRadius: 8,
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ color: "white" }}>🔓 Não Secretas</Text>
-        </TouchableOpacity>
-      </View>
-
-      <FlatList
-        data={filteredData}
-        keyExtractor={(item) => item.id || ""}
+        )}
         renderItem={({ item }) => (
           <KeysValuesCard
             keys={item}
@@ -185,8 +198,8 @@ export default function HomeScreen() {
             Total de Itens: {filteredData.length}
           </Text>
         )}
-        refreshing={useGetKeys.isFetching}
-        onRefresh={() => useGetKeys.refetch()}
+        //refreshing={useGetKeys.isFetching}
+        //onRefresh={() => useGetKeys.refetch()}
       />
     </View>
   );

@@ -4,18 +4,11 @@ import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface KeysValuesCardProps {
-  //keysItem: string[];
-  //valueItem: string;
   keys: Keys;
   copyValue?: () => void;
 }
 
-export const KeysValuesCard = ({
-  //keysItem,
-  //valueItem,
-  keys,
-  copyValue,
-}: KeysValuesCardProps) => {
+export const KeysValuesCard = ({ keys, copyValue }: KeysValuesCardProps) => {
   return (
     <TouchableOpacity
       onLongPress={copyValue}
@@ -25,7 +18,6 @@ export const KeysValuesCard = ({
     >
       <View style={{ flex: 1, gap: 5 }}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
-          {/* <Feather name="key" size={12} color={Colors.primary.tint} /> */}
           {keys.secret === true ? <Text>🔐</Text> : <Text>🔓</Text>}
 
           <Text style={styles.keyText}>{keys.key.join(", ")}</Text>

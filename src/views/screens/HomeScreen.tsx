@@ -63,80 +63,51 @@ export default function HomeScreen() {
 
   return (
     <View>
-      {/* <MyButton title="Add" onPress={handleAddKey}/> */}
-      {/* <KeyForm /> */}
-      <View style={{ alignItems: 'center', marginVertical: 20, flex: 1, justifyContent: "space-between", flexDirection: "row" , marginHorizontal:10}}  >
-        <View>
-          <Text style={{ color: Colors.primary.gray100, fontSize: 34, fontWeight: 'bold' }}>
-            Memo <Text style={{ color: Colors.primary.tint, fontSize: 34, fontWeight: 'bold' }}>Key</Text>
-          </Text>
-        </View>
-      <TouchableOpacity style={{ backgroundColor: Colors.primary.tint, borderRadius: "100%", padding: 4 }} onPress={() => setModalVisible(true)}>
-        <Feather name="plus" color={Colors.primary.gray100} size={24}/>
-      </TouchableOpacity>
-      </View>
-
-
-
-
-{/*       <MyButton
-        title="Abrir Bottom Sheet"
-        onPress={() => setModalVisible(true)}
-      /> */}
-
-      <BottomSheet
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        height="70%" // ou use número: 600
-        showHandle={true}
-      >
-        {/* Aqui você pode colocar QUALQUER componente */}
-        <KeyForm />
-      </BottomSheet>
-
-  
-
       <View
         style={{
+          alignItems: "center",
+          marginVertical: 20,
+          flex: 1,
+          justifyContent: "space-between",
           flexDirection: "row",
-          gap: 10,
-          marginBottom: 20,
-          alignContent: "center",
-          justifyContent: "center",
           marginHorizontal: 10,
         }}
       >
+        <View>
+          <Text
+            style={{
+              color: Colors.primary.gray100,
+              fontSize: 34,
+              fontWeight: "bold",
+            }}
+          >
+            Memo
+            <Text
+              style={{
+                color: Colors.primary.tint,
+                fontSize: 34,
+                fontWeight: "bold",
+              }}
+            >
+              Key
+            </Text>
+          </Text>
+        </View>
         <TouchableOpacity
-          onPress={() => handleSelectTypeKeys(true)}
           style={{
-            flex: 1,
-            padding: 8,
-            backgroundColor: Colors.primary.tintVariant,
-            borderRadius: 8,
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ color: "white" }}>🔐 Secretas</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => handleSelectTypeKeys(false)}
-          style={{
-            flex: 1,
-            padding: 8,
             backgroundColor: Colors.primary.tint,
-            borderRadius: 8,
+            borderRadius: 17,
+            justifyContent: "center",
             alignItems: "center",
+            width: 35,
+            height: 35,
           }}
+          onPress={() => setModalVisible(true)}
         >
-          <Text style={{ color: "white" }}>🔓 Não Secretas</Text>
+          <Feather name="plus" color={Colors.primary.gray100} size={24} />
         </TouchableOpacity>
       </View>
-
-      <FlatList
-        data={filteredData}
-        keyExtractor={(item, index) => item.id || `key-${index}`}
-        ListHeaderComponent={()=> (
-              <View style={{ marginBottom: 20, position: "relative" }}>
+      <View style={{ marginBottom: 20, position: "relative" }}>
         <Feather
           name="search"
           size={24}
@@ -177,7 +148,46 @@ export default function HomeScreen() {
           </TouchableOpacity>
         ) : null}
       </View>
-        )}
+
+      <View
+        style={{
+          flexDirection: "row",
+          gap: 10,
+          marginBottom: 20,
+          alignContent: "center",
+          justifyContent: "center",
+          marginHorizontal: 10,
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => handleSelectTypeKeys(true)}
+          style={{
+            flex: 1,
+            padding: 8,
+            backgroundColor: Colors.primary.tintVariant,
+            borderRadius: 8,
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ color: "white" }}>🔐 Secretas</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => handleSelectTypeKeys(false)}
+          style={{
+            flex: 1,
+            padding: 8,
+            backgroundColor: Colors.primary.tint,
+            borderRadius: 8,
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ color: "white" }}>🔓 Não Secretas</Text>
+        </TouchableOpacity>
+      </View>
+
+      <FlatList
+        data={filteredData}
+        keyExtractor={(item, index) => item.id || `key-${index}`}
         renderItem={({ item }) => (
           <KeysValuesCard
             keys={item}
@@ -201,6 +211,15 @@ export default function HomeScreen() {
         //refreshing={useGetKeys.isFetching}
         //onRefresh={() => useGetKeys.refetch()}
       />
+      <BottomSheet
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        height="70%" // ou use número: 600
+        showHandle={true}
+      >
+        {/* Aqui você pode colocar QUALQUER componente */}
+        <KeyForm />
+      </BottomSheet>
     </View>
   );
 }

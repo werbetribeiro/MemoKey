@@ -59,7 +59,7 @@ export default function HomeScreen() {
 
   useEffect(() => {
     getKeys();
-  }, [selectedTypeKeys]);
+  }, [selectedTypeKeys, modalVisible]);
 
   return (
     <View>

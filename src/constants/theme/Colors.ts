@@ -1,5 +1,6 @@
 const tintColor = "#FF630F";
 const tintColorVariant = "#8D55FF"
+const red = "#ec5a52ff";
 
 export default {
   primary: {
@@ -9,6 +10,7 @@ export default {
     background: "#191919",
     tint: tintColor,
     tintVariant: tintColorVariant,
+    red: red,
     gray100: "#EDEDED",
     gray200: "#C4C4C4",
     gray300: "#3E3E3E",

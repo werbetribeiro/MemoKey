@@ -1,14 +1,26 @@
 import Colors from "@/constants/theme/Colors";
 import { Keys } from "@/models/Keys";
+import { Feather } from "@expo/vector-icons";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 interface KeysValuesCardProps {
   keys: Keys;
   copyValue?: () => void;
+  delValue?: (id: string) => void;
 }
 
-export const KeysValuesCard = ({ keys, copyValue }: KeysValuesCardProps) => {
+export const KeysValuesCard = ({
+  keys,
+  copyValue,
+  delValue,
+}: KeysValuesCardProps) => {
   return (
     <TouchableOpacity
       onLongPress={copyValue}
@@ -24,6 +36,11 @@ export const KeysValuesCard = ({ keys, copyValue }: KeysValuesCardProps) => {
         </View>
         <Text style={styles.valueText}>{keys.value}</Text>
       </View>
+      {delValue && keys.id && (
+        <Pressable style={styles.copyButton} onPress={() => delValue(keys.id!)}>
+          <Feather name="trash" size={22} color={Colors.primary.red} />
+        </Pressable>
+      )}
     </TouchableOpacity>
   );
 };
@@ -33,7 +50,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary.gray300,
     borderRadius: 8,
     gap: 4,
-    marginBottom: 6,
+    marginBottom: 8,
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
@@ -50,8 +67,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   copyButton: {
-    backgroundColor: Colors.primary.gray100,
-    padding: 10,
-    borderRadius: 8,
+    padding: 5,
   },
 });

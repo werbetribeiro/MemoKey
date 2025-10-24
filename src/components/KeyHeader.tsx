@@ -13,7 +13,7 @@ export const KeyHeader = ({ onPress }: KeyHeaderProps) => {
       <View>
         <Text style={styles.title}>
           Memo{" "}
-          <Text style={(styles.title, { color: Colors.primary.tint })}>
+          <Text style={[styles.title, { color: Colors.primary.tint }]}>
             Key
           </Text>
         </Text>
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginVertical: 10,
+    marginBottom: 12,
     marginHorizontal: 15,
   },
   title: {

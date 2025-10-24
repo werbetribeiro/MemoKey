@@ -16,7 +16,11 @@ export default function RootLayout() {
         <Stack
           screenOptions={{
             headerShown: false,
-            contentStyle: { paddingTop: insets.top + 20, paddingBottom: insets.bottom, backgroundColor: Colors.primary.background },
+            contentStyle: { 
+              paddingTop: insets.top + 10, 
+              paddingBottom: insets.bottom, 
+              backgroundColor: Colors.primary.background 
+            },
             statusBarStyle: "light",
           }}
         ></Stack>

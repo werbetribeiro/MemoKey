@@ -16,7 +16,7 @@ import {
   View,
 } from "react-native";
 
-export default function HomeScreen() {
+export default function HomeScreen2() {
   const [keys, setKeys] = useState<Keys[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [searchText, setSearchText] = useState("");
